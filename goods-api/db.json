@@ -799,6 +799,13 @@
       "surname": "Trantow",
       "post": "Product Research Representative",
       "roles": "EMPLOYEE"
+    },
+    {
+      "id": "79456e3e-a8ae-443b-aab1-1b8d96f8f74f",
+      "name": "timofey",
+      "password": "qwerty1234",
+      "surname": "zhuk",
+      "roles": "EMPLOYEE"
     }
   ],
   "meetups": [

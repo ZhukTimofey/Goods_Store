@@ -3,6 +3,7 @@ import Input from "@mui/material/Input";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import Button from "@mui/material/Button";
 import { login } from "../UserStore";
+import {NavLink} from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 interface Form {
@@ -36,6 +37,9 @@ const LoginPage = () => {
       <Button variant="contained" onClick={handleSubmit(submit)}>
         Log in
       </Button>
+        <NavLink to={"/signup"}>
+            Регистрация
+        </NavLink>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import session from 'express-session';
 import { auth } from './auth.mjs';
 import { loginRoutes } from './routers/login.mjs';
 import { meetupsRoutes } from './routers/meetups.mjs';
+import {signupRoutes} from "./routers/signup.mjs"
 import { usersRoutes } from './routers/users.mjs';
 import { initDataBase } from './initDataBase.mjs';
 import { newsRoutes } from './routers/news.mjs';
@@ -41,6 +42,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.use('/api', loginRoutes);
+app.use('/api/signup', signupRoutes(db));
 app.use('/api/users', usersRoutes(db));
 app.use('/api/meetups', meetupsRoutes(db));
 app.use('/api/news', newsRoutes(db));

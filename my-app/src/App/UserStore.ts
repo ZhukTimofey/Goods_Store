@@ -9,6 +9,19 @@ export const login = createAsyncThunk(
     return resp.data;
   }
 );
+export const signup = createAsyncThunk(
+    "api/signup",
+    async () => {
+      const user = {
+        name:'timofey',
+        surname:'zhuk',
+        password:'qwerty1234'
+      }
+      const resp = await axios.post("api/signup", user);
+        console.log(resp.data)
+        return resp.data;
+    }
+);
 interface userStoreState {
   user: UserStore;
   loading: boolean;
