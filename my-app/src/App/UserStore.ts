@@ -9,27 +9,37 @@ export const login = createAsyncThunk(
     return resp.data;
   }
 );
+export const logout = createAsyncThunk("api/logout", async () => {
+  const resp = await axios.get("api/logout");
+  return resp.data;
+});
+export const cookieLogin = createAsyncThunk("api/login1", async () => {
+  const resp = await axios.get("/api/login");
+  return resp.data;
+});
 export const signup = createAsyncThunk(
-    "api/signup",
-    async () => {
-      const user = {
-        name:'timofey',
-        surname:'zhuk',
-        password:'qwerty1234'
-      }
-      const resp = await axios.post("api/signup", user);
-        console.log(resp.data)
-        return resp.data;
-    }
+  "api/signup",
+  async (user: {
+    email: string;
+    name: string;
+    surname: string;
+    password: string;
+  }) => {
+    const resp = await axios.post("api/signup", user);
+    console.log(resp.data);
+    return resp.data;
+  }
 );
 interface userStoreState {
   user: UserStore;
+  isAuthorized: boolean;
   loading: boolean;
   errors: null | {};
 }
 
 const initialState: userStoreState = {
   user: {} as UserStore,
+  isAuthorized: false,
   loading: false,
   errors: null,
 };
@@ -40,7 +50,22 @@ export const userStoreSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      state.user = action.payload;
+      state.user = action.payload.user;
+      state.isAuthorized = true;
+    });
+    builder.addCase(cookieLogin.fulfilled, (state, action) => {
+      console.log("fulfilled");
+      console.log(action.payload.user);
+      state.user = action.payload.user;
+      state.isAuthorized = true;
+    });
+    builder.addCase(cookieLogin.rejected, (state, action) => {
+      console.log("reject");
+      console.log(action);
+      state = initialState;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.isAuthorized = false;
     });
   },
 });

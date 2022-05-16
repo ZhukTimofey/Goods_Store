@@ -6,20 +6,27 @@ import session from 'express-session';
 import { auth } from './auth.mjs';
 import { loginRoutes } from './routers/login.mjs';
 import { meetupsRoutes } from './routers/meetups.mjs';
-import {signupRoutes} from "./routers/signup.mjs"
 import { usersRoutes } from './routers/users.mjs';
 import { initDataBase } from './initDataBase.mjs';
-import { newsRoutes } from './routers/news.mjs';
+import {signupRoutes} from "./routers/signup.mjs";
 
 const app = express();
-app.use(morgan('dev'));
-app.use(express.json());
 app.use(
   bodyParser.urlencoded({
+    limit:"100mb",
+    parameterLimit:"500000",
     extended: false,
   })
 );
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit:"100mb",
+  parameterLimit:"500000",
+
+}));
+app.use(bodyParser.raw({limit:"100mb",
+  parameterLimit:"500000",
+}));
+app.use(morgan('dev'));
+
 app.use(
   session({
     secret: 'this is the default passphrase',
@@ -45,7 +52,6 @@ app.use('/api', loginRoutes);
 app.use('/api/signup', signupRoutes(db));
 app.use('/api/users', usersRoutes(db));
 app.use('/api/meetups', meetupsRoutes(db));
-app.use('/api/news', newsRoutes(db));
 
 app.listen(3000, () => {
   console.log('Api server is up.');

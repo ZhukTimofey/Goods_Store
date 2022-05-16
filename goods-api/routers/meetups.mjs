@@ -6,7 +6,7 @@ import { compareDates } from "../utils.mjs";
 
 export const meetupsRoutes = (db) => {
   const meetupsRouter = express.Router();
-  meetupsRouter.get("/", ensureAuthenticated, async (req, res) => {
+  meetupsRouter.get("/", async (req, res) => {
     res.send(db.data.meetups);
   });
 
@@ -15,46 +15,19 @@ export const meetupsRoutes = (db) => {
     try {
       const response = {
         id: faker.datatype.uuid(),
-        modified: req.body.modified,
-        start: req.body.start,
-        finish: req.body.finish,
-        author: {
-          id: req.body.author.id,
-          name: req.body.author.name,
-          surname: req.body.author.surname,
-        },
-        speakers: req.body.speakers.map((s) => ({
-          id: faker.datatype.uuid(),
-          name: s.name,
-          surname: s.surname,
-        })),
-        subject: req.body.subject,
+        author: req.body.author,
+        title: req.body.title,
         excerpt: req.body.excerpt,
-        place: req.body.place,
-        goCount: 0,
-        status: "REQUEST",
-        isOver: false,
-        image: req.body.image,
+        price: req.body.price,
+        status: "DRAFT",
+        buyers:[],
+        img: req.body.img,
       };
-
-      if (
-        (isDateValid(req.body.start) || req.body.start === undefined) &&
-        (isDateValid(req.body.finish) || req.body.finish === undefined) &&
-        compareDates(req.body.start, req.body.finish)
-      ) {
-        db.data.participants[response.id] = [];
-        db.data.votedUsers[response.id] = [];
         const meetup = db.data.meetups.push(response);
         await db.write();
         res.send(response);
-      } else {
-        res
-          .status(500)
-          .send(
-            "Error. Dates must be valid and start date must be earlier than finish date!"
-          );
-      }
     } catch (err) {
+      console.log(err.message);
       res.status(500).send(err);
     }
   });
@@ -65,7 +38,20 @@ export const meetupsRoutes = (db) => {
         await db.write();
         res.send(db.data.meetups[index]);
     });
-
+  meetupsRouter.put("/buyers", ensureAuthenticated, async (req, res) => {
+    const index = db.data.meetups.findIndex((it) => it.id === req.body.id);
+  const buyers = db.data.meetups[index].buyers
+    buyers.push(req.body.buyer)
+    db.data.meetups[index] = {...db.data.meetups[index]};
+    await db.write();
+    res.send(db.data.meetups[index]);
+  });
+  meetupsRouter.put("/buying", ensureAuthenticated, async (req, res) => {
+    const index = db.data.meetups.findIndex((it) => it.id === req.body.id);
+    db.data.meetups[index] = {...db.data.meetups[index], ...req.body,buyer:db.data.meetups[index].buyers.find(({id})=>id===req.body.userID)};
+    await db.write();
+    res.send(db.data.meetups[index]);
+  });
   meetupsRouter.get("/:id", ensureAuthenticated, async (req, res) => {
     const meetup = db.data.meetups.find((m) => m.id === req.params.id);
     if (!meetup) {

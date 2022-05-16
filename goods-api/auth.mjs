@@ -3,8 +3,8 @@ import Strategy from "passport-local";
 
 export const auth = (users) => {
   passport.use(
-    new Strategy(function (username, password, cb) {
-      const user = users.find((it) => it.name === username);
+    new Strategy(function (email, password, cb) {
+      const user = users.find((it) => it.email === email);
       if (!user) {
         return cb(null, false, { message: "Incorrect username or password." });
       }

@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Input from "@mui/material/Input";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import Button from "@mui/material/Button";
 import { login } from "../UserStore";
-import {NavLink} from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import TextField from "@mui/material/TextField";
+import "./styles.scss";
+import Typography from "@mui/material/Typography";
 
 interface Form {
   username: string;
@@ -14,32 +17,61 @@ interface Form {
 const LoginPage = () => {
   const { control, handleSubmit } = useForm<Form>();
   const dispatch = useAppDispatch();
-  const store = useAppSelector((state) => state.userStore);
   const submit: SubmitHandler<Form> = (data) => {
     dispatch(login(data));
-    //console.log(data);
   };
-  console.log(store);
+  const { isAuthorized } = useAppSelector((state) => state.userStore);
+  const nav = useNavigate();
+  useEffect(() => {
+    if (isAuthorized) {
+      nav("/");
+    }
+  }, [isAuthorized]);
   return (
-    <div>
+    <div className={"login-wrapper"}>
+      <Typography
+        variant="h4"
+        component="div"
+        sx={{ margin: "24px 0", textAlign: "center" }}
+      >
+        Вход в аккаунт
+      </Typography>
       <Controller
         name="username"
         defaultValue={""}
         control={control}
-        render={({ field }) => <Input {...field} />}
+        render={({ field }) => (
+          <TextField
+            sx={{ margin: "16px auto", width: "60%" }}
+            id="outlined-email-input"
+            label="Почта"
+            {...field}
+          />
+        )}
       />
       <Controller
         name="password"
         defaultValue={""}
         control={control}
-        render={({ field }) => <Input {...field} />}
+        render={({ field }) => (
+          <TextField
+            sx={{ margin: "16px 0", width: "60%" }}
+            id="outlined-password-input"
+            label="Пароль"
+            type="password"
+            autoComplete="current-password"
+            {...field}
+          />
+        )}
       />
-      <Button variant="contained" onClick={handleSubmit(submit)}>
-        Log in
+      <Button
+        sx={{ margin: "16px 0", width: "60%" }}
+        variant="contained"
+        onClick={handleSubmit(submit)}
+      >
+        Войти
       </Button>
-        <NavLink to={"/signup"}>
-            Регистрация
-        </NavLink>
+      <NavLink to={"/signup"}>Регистрация</NavLink>
     </div>
   );
 };
