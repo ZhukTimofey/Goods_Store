@@ -15,8 +15,19 @@
   border:1px black dashed;
   padding:40px 24px;
   border-radius: 8px;
+  margin-bottom: 24px;
 }
 .buy-form {
   display: flex;
   flex-direction: column;
+}
+.close-cross {
+  width:24px;
+  height:24px;
+  position: absolute;
+  top:10%;
+  right: 5%;
+}
+.creation-image {
+  position: relative;
 }

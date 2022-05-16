@@ -12,6 +12,8 @@ import { useAppSelector } from "../../hooks/hooks";
 export default function ButtonAppBar() {
   const navigate = useNavigate();
   const store = useAppSelector((state) => state.userStore);
+  console.log("AWawdasdaw");
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

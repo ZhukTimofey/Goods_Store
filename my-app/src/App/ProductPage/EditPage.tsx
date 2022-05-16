@@ -1,10 +1,12 @@
-import React from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useDropzone } from "react-dropzone";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { editProduct, requestForBuying } from "../GoodsStore";
+import { editProduct, setIsEdited } from "../GoodsStore";
+import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 
 interface Form {
   title: string;
@@ -18,13 +20,16 @@ interface Props {
   price: number;
   img: string;
   id: string;
+  setIsEdit: Dispatch<SetStateAction<boolean>>;
 }
 
-const EditPage = ({ title, excerpt, price, img, id }: Props) => {
+const EditPage = ({ title, excerpt, price, img, id, setIsEdit }: Props) => {
   const {
     control,
     handleSubmit,
     setValue,
+    watch,
+    getValues,
     formState: { errors },
   } = useForm<Form>({
     defaultValues: {
@@ -34,7 +39,8 @@ const EditPage = ({ title, excerpt, price, img, id }: Props) => {
       img: img,
     },
   });
-  const store = useAppSelector((state) => state.userStore);
+  const navigate = useNavigate();
+  const { isEdited } = useAppSelector((state) => state.goodsStore);
   const dispatch = useAppDispatch();
   const onDrop = async (img: Blob[] | undefined) => {
     if (img && img.length) {
@@ -53,11 +59,23 @@ const EditPage = ({ title, excerpt, price, img, id }: Props) => {
     dispatch(editProduct(good));
   };
 
+  if (isEdited) {
+    setIsEdit(false);
+  }
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: 1,
   });
+  const resetImage = () => {
+    setValue("img", "");
+  };
 
+  useEffect(() => {
+    return function () {
+      dispatch(setIsEdited());
+    };
+  });
   return (
     <div>
       <form className={"form-wrapper"} onSubmit={handleSubmit(onSubmit)}>
@@ -117,27 +135,61 @@ const EditPage = ({ title, excerpt, price, img, id }: Props) => {
             />
           )}
         />
-        <Controller
-          name="img"
-          control={control}
-          render={() => (
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              {isDragActive ? (
-                <p>Drop the files here ...</p>
-              ) : (
-                <p>Drag 'n' drop some files here, or click to select files</p>
-              )}
-            </div>
-          )}
-        />
-        <Button
-          sx={{ minWidth: "200px", margin: "0 auto" }}
-          variant="contained"
-          onClick={handleSubmit(onSubmit)}
-        >
-          Создать
-        </Button>
+        {!watch("img") ? (
+          <Controller
+            name="img"
+            control={control}
+            render={() => (
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <div className={"drop-zone-border"}>
+                  <Typography
+                    gutterBottom
+                    variant="body2"
+                    color="text.secondary"
+                    component="div"
+                  >
+                    Загрузить
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="body2"
+                    color="text.secondary"
+                    component="div"
+                  >
+                    Или перетащите сюда изображение
+                  </Typography>
+                </div>
+              </div>
+            )}
+          />
+        ) : (
+          <div className={"creation-image"}>
+            <img src={getValues("img")} alt="" />
+            <img
+              onClick={() => resetImage()}
+              className={"close-cross"}
+              src="https://www.svgrepo.com/show/178323/cross-close.svg"
+              alt=""
+            />
+          </div>
+        )}
+        <div className={"edit-page-buttons-wrapper"}>
+          <Button
+            sx={{ minWidth: "200px", margin: "0 auto" }}
+            variant="contained"
+            onClick={handleSubmit(onSubmit)}
+          >
+            Редактировать
+          </Button>
+          <Button
+            sx={{ minWidth: "200px", margin: "0 auto" }}
+            variant="contained"
+            onClick={() => setIsEdit(false)}
+          >
+            Отменить
+          </Button>
+        </div>
       </form>
     </div>
   );

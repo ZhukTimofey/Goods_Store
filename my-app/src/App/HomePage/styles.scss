@@ -6,7 +6,10 @@
   text-align: center;
 }
 .home-page-buttons {
-  margin: 24px 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.06);
+  border: 1px solid #F6F7FB;
+  padding:24px;
+  margin: 40px 0;
   display: flex;
   justify-content: space-between;
 }

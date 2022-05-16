@@ -2,10 +2,12 @@ import React from "react";
 import { useAppDispatch } from "../../hooks/hooks";
 import { login, signup } from "../UserStore";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
+import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import "./styles.scss";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { NavLink } from "react-router-dom";
 
 type Form = {
   email: string;
@@ -141,12 +143,13 @@ const SignupPage = () => {
         />
 
         <Button
-          sx={{ minWidth: "200px", margin: "0 auto" }}
+          sx={{ minWidth: "200px", margin: "0 auto 16px" }}
           variant="contained"
           onClick={handleSubmit(submit)}
         >
           Создать
         </Button>
+        <NavLink to={"/login"}>Вернуться на страницу логина</NavLink>
       </form>
     </>
   );

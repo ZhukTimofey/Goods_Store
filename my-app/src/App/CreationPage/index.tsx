@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
@@ -8,6 +8,7 @@ import axios from "axios";
 import "./styles.scss";
 import { useAppSelector } from "../../hooks/hooks";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 
 interface Form {
   title: string;
@@ -22,9 +23,11 @@ const CreationPage = () => {
     handleSubmit,
     setValue,
     watch,
+    getValues,
     formState: { errors },
   } = useForm<Form>();
   const store = useAppSelector((state) => state.userStore);
+  const navigate = useNavigate();
   const onDrop = async (img: Blob[] | undefined) => {
     if (img && img.length) {
       const reader = new FileReader();
@@ -36,18 +39,30 @@ const CreationPage = () => {
       };
     }
   };
+
   const onSubmit: SubmitHandler<Form> = async (data) => {
     const good = { ...data, author: store.user };
-    console.log(good);
     const resp = await axios.post("api/meetups", good);
+    navigate(`/goods/${resp.data.id}`);
   };
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: 1,
   });
+  const resetImage = () => {
+    setValue("img", "");
+  };
+
   return (
     <>
-      <h3 className={"form-header"}>Создание своего товара</h3>
+      <Typography
+        variant="h4"
+        component="div"
+        sx={{ margin: "24px 0", textAlign: "center" }}
+      >
+        Создание своего товара
+      </Typography>
       <form className={"form-wrapper"} onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="title"
@@ -137,7 +152,15 @@ const CreationPage = () => {
             )}
           />
         ) : (
-          <div>иозбражение загружено</div>
+          <div className={"creation-image"}>
+            <img src={getValues("img")} alt="" />
+            <img
+              onClick={() => resetImage()}
+              className={"close-cross"}
+              src="https://www.svgrepo.com/show/178323/cross-close.svg"
+              alt=""
+            />
+          </div>
         )}
         <Button
           sx={{ minWidth: "200px", margin: "0 auto" }}

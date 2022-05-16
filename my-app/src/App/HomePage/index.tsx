@@ -20,7 +20,7 @@ const HomePage = () => {
       <Typography
         variant="h4"
         component="div"
-        sx={{ margin: "24px 0", textAlign: "center" }}
+        sx={{ margin: "40px 0", textAlign: "center" }}
       >
         Добро пожаловать в личный кабинет
       </Typography>
@@ -32,7 +32,7 @@ const HomePage = () => {
         Здесь вы можете посмотреть ваши личные данные о количесвте покупок, ваши
         выложеные товары, а так же выложить новый товар
       </Typography>
-      <Card sx={{ maxWidth: 400, margin: "0 auto" }}>
+      <Card sx={{ maxWidth: 400, margin: "40px auto" }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             Личные данные

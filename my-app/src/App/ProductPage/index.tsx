@@ -7,7 +7,12 @@ import { Button, CardActionArea, CardActions } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { confirmBuying, getProduct, requestForBuying } from "../GoodsStore";
-import { setGoodsInitState } from "../GoodsStore";
+import {
+  setGoodsInitState,
+  setIsRequested,
+  setIsDeleted,
+  setIsBought,
+} from "../GoodsStore";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { deleteProduct } from "../GoodsStore";
@@ -29,7 +34,9 @@ const Index = () => {
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { product } = useAppSelector((state) => state.goodsStore);
+  const { product, isBought, isDeleted, isRequested } = useAppSelector(
+    (state) => state.goodsStore
+  );
   const { productStatus } = useAppSelector((state) => state.goodsStore);
   const { user } = useAppSelector((state) => state.userStore);
   const isAuthor = product?.author?.id === user?.id;
@@ -50,6 +57,9 @@ const Index = () => {
   useEffect(() => {
     return function () {
       dispatch(setGoodsInitState());
+      dispatch(setIsRequested());
+      dispatch(setIsDeleted());
+      dispatch(setIsBought());
     };
   }, []);
 
@@ -60,6 +70,10 @@ const Index = () => {
     }
   };
 
+  if (isBought || isDeleted || isRequested) {
+    navigate("/");
+  }
+
   return isEditing ? (
     isLoaded ? (
       <EditPage
@@ -68,6 +82,7 @@ const Index = () => {
         price={Number(product?.price)}
         img={product?.img}
         id={product?.id}
+        setIsEdit={setIsEditing}
       />
     ) : (
       <div>load</div>
@@ -79,10 +94,13 @@ const Index = () => {
       <Card>
         <CardActionArea>
           <CardMedia
+            style={{
+              width: "auto",
+              maxHeight: "auto",
+              margin: "0 auto",
+            }}
             component="img"
-            height="140"
             image={product?.img}
-            alt="green iguana"
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
@@ -217,32 +235,43 @@ const Index = () => {
         </Modal>
       </div>
       {isAuthor && (
-        <div>
-          {product.buyers.map(({ email, message, id }) => (
-            <Card sx={{ maxWidth: 345, margin: "32px 0 0 0" }}>
-              <CardActionArea>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {email}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {message}
-                  </Typography>
-                  <Button
-                    onClick={() => {
-                      const data = { id: product?.id, userID: id };
-                      dispatch(confirmBuying(data));
-                    }}
-                    size="small"
-                    color="primary"
-                  >
-                    Подтведить
-                  </Button>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          ))}
-        </div>
+        <>
+          {!!product.buyers.length && (
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ margin: "24px 0", textAlign: "center" }}
+            >
+              Запросы на покупку
+            </Typography>
+          )}
+          <div>
+            {product.buyers.map(({ email, message, id }) => (
+              <Card sx={{ maxWidth: 345, margin: "32px 0 0 0" }}>
+                <CardActionArea>
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {email}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {message}
+                    </Typography>
+                    <Button
+                      onClick={() => {
+                        const data = { id: product?.id, userID: id };
+                        dispatch(confirmBuying(data));
+                      }}
+                      size="small"
+                      color="primary"
+                    >
+                      Подтведить
+                    </Button>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
