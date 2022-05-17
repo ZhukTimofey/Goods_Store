@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserStore } from "../types/types";
 import axios from "axios";
+import { goodsStoreSlice } from "./GoodsStore";
 
 export const login = createAsyncThunk(
   "api/login",
@@ -26,13 +27,13 @@ export const signup = createAsyncThunk(
     password: string;
   }) => {
     const resp = await axios.post("api/signup", user);
-    console.log(resp.data);
     return resp.data;
   }
 );
 interface userStoreState {
   user: UserStore;
   isAuthorized: boolean;
+  isSigndUp: boolean;
   loading: boolean;
   errors: null | {};
 }
@@ -40,6 +41,7 @@ interface userStoreState {
 const initialState: userStoreState = {
   user: {} as UserStore,
   isAuthorized: false,
+  isSigndUp: false,
   loading: false,
   errors: null,
 };
@@ -47,7 +49,11 @@ const initialState: userStoreState = {
 export const userStoreSlice = createSlice({
   name: "userStore",
   initialState,
-  reducers: {},
+  reducers: {
+    resetIsSigndUp: (state) => {
+      state.isSigndUp = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
       state.user = action.payload.user;
@@ -67,6 +73,12 @@ export const userStoreSlice = createSlice({
     builder.addCase(logout.fulfilled, (state, action) => {
       state.isAuthorized = false;
     });
+    builder.addCase(signup.fulfilled, (state, action) => {
+      state.isSigndUp = true;
+    });
   },
 });
+
+export const { resetIsSigndUp } = userStoreSlice.actions;
+
 export default userStoreSlice.reducer;

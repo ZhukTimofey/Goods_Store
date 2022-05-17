@@ -23,7 +23,7 @@ export const goodsRoutes = (db) => {
         buyers:[],
         img: req.body.img,
       };
-        const meetup = db.data.meetups.push(response);
+        const meetup = db.data.goods.push(response);
         await db.write();
         res.send(response);
     } catch (err) {
@@ -33,27 +33,27 @@ export const goodsRoutes = (db) => {
   });
 
     goodsRoutes.put("/", ensureAuthenticated, async (req, res) => {
-        const index = db.data.meetups.findIndex((it) => it.id === req.body.id);
-        db.data.meetups[index] = {...db.data.meetups[index], ...req.body};
+        const index = db.data.goods.findIndex((it) => it.id === req.body.id);
+        db.data.goods[index] = {...db.data.goods[index], ...req.body};
         await db.write();
-        res.send(db.data.meetups[index]);
+        res.send(db.data.goods[index]);
     });
   goodsRoutes.put("/buyers", ensureAuthenticated, async (req, res) => {
-    const index = db.data.meetups.findIndex((it) => it.id === req.body.id);
-  const buyers = db.data.meetups[index].buyers
+    const index = db.data.goods.findIndex((it) => it.id === req.body.id);
+  const buyers = db.data.goods[index].buyers
     buyers.push(req.body.buyer)
-    db.data.meetups[index] = {...db.data.meetups[index]};
+    db.data.goods[index] = {...db.data.goods[index]};
     await db.write();
-    res.send(db.data.meetups[index]);
+    res.send(db.data.goods[index]);
   });
   goodsRoutes.put("/buying", ensureAuthenticated, async (req, res) => {
-    const index = db.data.meetups.findIndex((it) => it.id === req.body.id);
-    db.data.meetups[index] = {...db.data.meetups[index], ...req.body,buyer:db.data.meetups[index].buyers.find(({id})=>id===req.body.userID)};
+    const index = db.data.goods.findIndex((it) => it.id === req.body.id);
+    db.data.goods[index] = {...db.data.goods[index], ...req.body,buyer:db.data.goods[index].buyers.find(({id})=>id===req.body.userID)};
     await db.write();
-    res.send(db.data.meetups[index]);
+    res.send(db.data.goods[index]);
   });
   goodsRoutes.get("/:id", ensureAuthenticated, async (req, res) => {
-    const meetup = db.data.meetups.find((m) => m.id === req.params.id);
+    const meetup = db.data.goods.find((m) => m.id === req.params.id);
     if (!meetup) {
       res.sendStatus(404);
     }
@@ -61,9 +61,9 @@ export const goodsRoutes = (db) => {
   });
 
   goodsRoutes.delete("/:id", ensureAuthenticated, async (req, res) => {
-    const index = db.data.meetups.findIndex((it) => it.id === req.params.id);
+    const index = db.data.goods.findIndex((it) => it.id === req.params.id);
     if (index >= 0) {
-      db.data.meetups.splice(index, 1);
+      db.data.goods.splice(index, 1);
     }
     await db.write();
     res.send({});

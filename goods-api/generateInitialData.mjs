@@ -6,5 +6,5 @@ export const generateInitialData = () => {
   const meetups = generateMeetups(20, users);
   const participants = generateShortUsers(meetups, users);
   const votedUsers = generateShortUsers(meetups, users);
-  return { users, meetups, participants, votedUsers, news };
+  return { users, goods: meetups, participants, votedUsers, news };
 };

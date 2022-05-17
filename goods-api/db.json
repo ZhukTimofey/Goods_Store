@@ -23,9 +23,25 @@
       "password": "qwerty1234",
       "surname": "zhuk2",
       "roles": "USER"
+    },
+    {
+      "id": "0ea93632-8f9d-484d-95b0-39b9f3806b83",
+      "email": "timofey69115@gmail.com",
+      "name": "wqeqw",
+      "password": "qwerty1234",
+      "surname": "eqweqwe",
+      "roles": "USER"
+    },
+    {
+      "id": "8738b013-27a8-4bcd-8426-afe3885a6c0c",
+      "email": "tes123t@test.by",
+      "name": "qweqwe",
+      "password": "qwerty1234",
+      "surname": "qweqwe",
+      "roles": "USER"
     }
   ],
-  "meetups": [
+  "goods": [
     {
       "id": "0dc6a9e7-fb43-45df-9f6a-3d738034eb13",
       "author": {

@@ -1,13 +1,12 @@
-import React from "react";
-import { useAppDispatch } from "../../hooks/hooks";
-import { login, signup } from "../UserStore";
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { resetIsSigndUp, signup } from "../UserStore";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
-import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import "./styles.scss";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 type Form = {
   email: string;
@@ -19,6 +18,7 @@ type Form = {
 
 const SignupPage = () => {
   const dispatch = useAppDispatch();
+  const store = useAppSelector((state) => state.userStore);
   const {
     control,
     handleSubmit,
@@ -28,6 +28,17 @@ const SignupPage = () => {
   const submit: SubmitHandler<Form> = (data) => {
     dispatch(signup(data));
   };
+  const navigate = useNavigate();
+
+  if (store.isSigndUp) {
+    navigate("/login");
+  }
+  useEffect(() => {
+    return function () {
+      dispatch(resetIsSigndUp());
+    };
+  }, []);
+
   return (
     <>
       <Typography
@@ -114,6 +125,8 @@ const SignupPage = () => {
           }}
           render={({ field }) => (
             <TextField
+              error={!!errors?.password}
+              helperText={errors?.password?.message}
               sx={{ margin: "16px auto", width: "60%", height: "65px" }}
               id="outlined-password-input"
               type="password"
@@ -127,12 +140,13 @@ const SignupPage = () => {
           defaultValue={""}
           control={control}
           rules={{
-            validate: (value) => value === getValues("password"),
+            validate: (value) =>
+              value === getValues("password") || "Пароли не совподают",
           }}
           render={({ field }) => (
             <TextField
-              error={!!errors?.password}
-              helperText={errors?.password?.message}
+              error={!!errors?.confirmPassword}
+              helperText={errors?.confirmPassword?.message}
               sx={{ margin: "16px auto 32px", width: "60%", height: "65px" }}
               id="outlined-cpassword-input"
               type="password"
