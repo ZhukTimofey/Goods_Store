@@ -95,8 +95,8 @@ const Index = () => {
         <CardActionArea>
           <CardMedia
             style={{
-              width: "auto",
-              maxHeight: "auto",
+              width: "100%",
+              maxHeight: "100%",
               margin: "0 auto",
             }}
             component="img"

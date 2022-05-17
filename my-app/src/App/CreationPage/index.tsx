@@ -42,7 +42,7 @@ const CreationPage = () => {
 
   const onSubmit: SubmitHandler<Form> = async (data) => {
     const good = { ...data, author: store.user };
-    const resp = await axios.post("api/meetups", good);
+    const resp = await axios.post("api/goods", good);
     navigate(`/goods/${resp.data.id}`);
   };
 
@@ -152,8 +152,8 @@ const CreationPage = () => {
             )}
           />
         ) : (
-          <div className={"creation-image"}>
-            <img src={getValues("img")} alt="" />
+          <div className={"creation-image-wrapper"}>
+            <img className={"creation-image"} src={getValues("img")} alt="" />
             <img
               onClick={() => resetImage()}
               className={"close-cross"}

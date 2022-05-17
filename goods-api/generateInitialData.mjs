@@ -1,5 +1,4 @@
 import { generateUsers } from './data/users.mjs';
-import { generateMeetups, generateShortUsers } from './data/meetups.mjs';
 
 
 export const generateInitialData = () => {

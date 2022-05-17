@@ -2,26 +2,26 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Good, UserStore } from "../types/types";
 import axios from "axios";
 
-export const getGoods = createAsyncThunk("api/meetups", async () => {
-  const resp = await axios.get("api/meetups");
+export const getGoods = createAsyncThunk("api/goods", async () => {
+  const resp = await axios.get("api/goods");
   return resp.data;
 });
 export const getProduct = createAsyncThunk(
-  "api/meetups/id",
+  "api/goods/id",
   async (id: string) => {
-    const resp = await axios.get(`/api/meetups/${id}`);
+    const resp = await axios.get(`/api/goods/${id}`);
     return resp.data;
   }
 );
 export const deleteProduct = createAsyncThunk(
-  "api/meetups/delete",
+  "api/goods/delete",
   async (id: string) => {
-    const resp = await axios.delete(`/api/meetups/${id}`);
+    const resp = await axios.delete(`/api/goods/${id}`);
     return resp.data;
   }
 );
 export const editProduct = createAsyncThunk(
-  "api/meetups/edit",
+  "api/goods/edit",
   async (data: {
     title: string;
     excerpt: string;
@@ -29,27 +29,27 @@ export const editProduct = createAsyncThunk(
     img: string;
     id: string;
   }) => {
-    const resp = await axios.put(`/api/meetups`, data);
+    const resp = await axios.put(`/api/goods`, data);
     return resp.data;
   }
 );
 export const requestForBuying = createAsyncThunk(
-  "api/meetups/",
+  "api/goods/",
   async (data: { id: string; buyer: UserStore; message: string }) => {
     const body = {
       ...data,
       buyer: { ...data.buyer, message: data.message },
     };
-    const resp = await axios.put(`/api/meetups/buyers`, body);
+    const resp = await axios.put(`/api/goods/buyers`, body);
     return resp;
   }
 );
 
 export const confirmBuying = createAsyncThunk(
-  "api/meetups/buy",
+  "api/goods/buy",
   async ({ id, userID }: { id: string; userID: string }) => {
     const body = { id, userID, status: "SOLD" };
-    const resp = await axios.put(`/api/meetups/buying`, body);
+    const resp = await axios.put(`/api/goods/buying`, body);
     return resp;
   }
 );

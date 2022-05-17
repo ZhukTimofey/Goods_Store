@@ -28,6 +28,9 @@
   top:10%;
   right: 5%;
 }
-.creation-image {
+.creation-image-wrapper {
   position: relative;
+}
+.creation-image {
+  max-width: 100%;
 }

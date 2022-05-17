@@ -164,8 +164,8 @@ const EditPage = ({ title, excerpt, price, img, id, setIsEdit }: Props) => {
             )}
           />
         ) : (
-          <div className={"creation-image"}>
-            <img src={getValues("img")} alt="" />
+          <div className={"creation-image-wrapper"}>
+            <img className={"creation-image"} src={getValues("img")} alt="" />
             <img
               onClick={() => resetImage()}
               className={"close-cross"}

@@ -20,7 +20,7 @@ const GoodsPage = () => {
   }, []);
   return (
     <div className={"goods-store"}>
-      {goods.map(({ title, excerpt, img, id }) => (
+      {goods.map(({ title, excerpt, img, id, price }) => (
         <Card sx={{ maxWidth: 345, margin: "24px" }}>
           <CardMedia
             component="img"
@@ -28,7 +28,7 @@ const GoodsPage = () => {
             height="140"
             image={img}
           />
-          <CardContent>
+          <CardContent sx={{ padding: "16px 16px 0" }}>
             <Typography gutterBottom variant="h5" component="div">
               {title}
             </Typography>
@@ -44,6 +44,9 @@ const GoodsPage = () => {
               color="text.secondary"
             >
               {excerpt}
+            </Typography>
+            <Typography variant="h6" component="div">
+              {`${price} $`}
             </Typography>
           </CardContent>
           <CardActions>
