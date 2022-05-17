@@ -7,7 +7,7 @@ import { compareDates } from "../utils.mjs";
 export const goodsRoutes = (db) => {
   const goodsRoutes = express.Router();
   goodsRoutes.get("/", async (req, res) => {
-    res.send(db.data.meetups);
+    res.send(db.data.goods);
   });
 
   goodsRoutes.post("/", ensureAuthenticated, async (req, res) => {
